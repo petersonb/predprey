@@ -85,10 +85,9 @@ class Relations:
 class PredatorPreyModel:
     def __init__(self):
         self.animals = []
-        self.deltaT = 1
         
     def addAnimal(self,name,pop = 100, growth = .1):
-        a = Animal(type,pop,growth)
+        a = Animal(name,pop,growth)
         self.animals.append(a)
         return a
     
@@ -105,14 +104,14 @@ class PredatorPreyModel:
         
 if __name__ == "__main__":
     model = PredatorPreyModel()
-    r = model.addAnimal('Rabbit',200,2)
-    f = model.addAnimal('Fox',100,-.1)
+    r = model.addAnimal('Rabbit',50,.1)
+    f = model.addAnimal('Fox',15,-.05)
     
     print(r.getPopulation())
     print(f.getPopulation())
     
-    model.setPredator(f,r,.2,.1)
-    model.euler(100,.001)
+    model.setPredator(f,r,.001,.01)
+    model.euler(100,1)
     
     print(r.getPopulation())
     print(f.getPopulation())
