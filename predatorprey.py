@@ -96,11 +96,18 @@ class PredatorPreyModel:
         prey.addPredator(pred,prey_k)
     
     def euler(self,itters, dt):
+        data = [[0],[]]
+        for animal in self.animals:
+            data[1].append([animal.getPopulation()])
+        print(data)
         for i in range(itters):
-            for animal in self.animals:
+            data[0].append(data[0][-1]+dt)
+            for j in range(len(self.animals)):
+                animal = self.animals[j]
                 animal.singleEulerSim(dt)
-                print(animal.getName(),animal.getPopulation())
-            print()
+                data[1][j].append(animal.getPopulation())
+                
+        return data
         
 if __name__ == "__main__":
     model = PredatorPreyModel()
@@ -111,7 +118,8 @@ if __name__ == "__main__":
     print(f.getPopulation())
     
     model.setPredator(f,r,.001,.01)
-    model.euler(100,1)
+    data = model.euler(100,1)
+    print(data)
     
     print(r.getPopulation())
     print(f.getPopulation())
