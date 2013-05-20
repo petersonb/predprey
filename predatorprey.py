@@ -1,24 +1,90 @@
 
 class Animal:
     def __init__(self,name,pop,growth):
-        self.type = name
+        self.name = name
         self.population = pop;
         self.growthConstant = growth
         
         self.predators = []
         self.prey = []
+        self.relations = Relations()
+        
+    def getName(self):
+        return self.name
+    
+    def getPopulation(self):
+        return self.population
+        
+    def addPredator(self,pred,pval):
+        self.predators.append(pred)
+        self.relations.addRelation(pred,pval)
+        
+    def addPrey(self,prey,pval):
+        self.prey.append(prey)
+        self.relations.addRelation(prey,pval)
+        
+    def singleEulerSim(self,dt):
+        k = self.growthConstant
+        P = self.population
+        preds = self.predators
+        prey = self.prey
+        relations = self.relations
+        
+        growth = k*P
+        
+        predation = 0
+        for predator in preds:
+            pr = relations.get(predator)
+            pval = pr.getPredationConstant() 
+            effect = -pval * predator.getPopulation() * P
+            predation -= effect
+            
+        consumption = 0
+        for pry in prey:
+            pr = relations.get(pry)
+            pval = pr.getPredationConstant()
+            effect = pval * pry.getPopulation() * P
+            consumption += effect
+
+        deriv = growth - predation + consumption
+        change = deriv * dt
+        self.population += change
         
 class Relation:
-    def __init__(self,predator,prey,pred_k,prey_k):
-        self.predator = predator
-        self.prey = prey
-        self.pred_k = pred_k
-        self.prey_k = prey_k
+    def __init__(self,animal,pval):
+        self.animal = animal
+        self.pval = pval
+        
+    def getAnimal(self):
+        return self.animal
+        
+    def getPredationConstant(self):
+        return self.pval
+    
+    def __repr__(self):
+        return self.animal
+        
+class Relations:
+    def __init__(self):
+        self.relations = []
+        
+    def addRelation(self,animal,pval):
+        new = Relation(animal,pval)
+        self.relations.append(new)
+        
+    def get(self,animal):
+        rels = self.relations
+        
+        for rel in rels:
+            rani = rel.getAnimal()
+            if rani.getName() == animal.getName():
+                return rel
+        
+        return None
         
 class PredatorPreyModel:
     def __init__(self):
         self.animals = []
-        self.relations = []
         self.deltaT = 1
         
     def addAnimal(self,name,pop = 100, growth = .1):
@@ -26,20 +92,27 @@ class PredatorPreyModel:
         self.animals.append(a)
         return a
     
-    def addRelation(self):
-        pass
-    
     def setPredator(self,pred,prey,pred_k,prey_k):
-        r = Relation(pred,prey,pred_k,prey_k)
-        self.relations.append(r)
-        return r
+        pred.addPrey(prey,pred_k)
+        prey.addPredator(pred,prey_k)
     
-    def euler(self):
-        pass
+    def euler(self,itters, dt):
+        for i in range(itters):
+            for animal in self.animals:
+                animal.singleEulerSim(dt)
+                print(animal.getName(),animal.getPopulation())
+            print()
         
 if __name__ == "__main__":
     model = PredatorPreyModel()
-    r = model.addAnimal('Rabbit',200,.2)
+    r = model.addAnimal('Rabbit',200,2)
     f = model.addAnimal('Fox',100,-.1)
     
+    print(r.getPopulation())
+    print(f.getPopulation())
+    
     model.setPredator(f,r,.2,.1)
+    model.euler(100,.001)
+    
+    print(r.getPopulation())
+    print(f.getPopulation())
