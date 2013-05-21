@@ -1,74 +1,61 @@
 
-import random
-
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg
-from matplotlib.figure import Figure
-
+import sys
 from PyQt4 import QtGui, QtCore
 
-class MatplotlibWidget(QtGui.QWidget):
-    def __init__(self, parent=None):
-        super(MatplotlibWidget, self).__init__(parent)
+class PredPreyInterface(QtGui.QMainWindow):
 
-        self.figure = Figure()
-        self.canvas = FigureCanvasQTAgg(self.figure)
+    def __init__(self):
+        super(PredPreyInterface, self).__init__()
 
-        self.axis = self.figure.add_subplot(111)
+        self.initializeInterface()
 
-        self.layoutVertical = QtGui.QVBoxLayout(self)
-        self.layoutVertical.addWidget(self.canvas)
+    def initializeInterface(self):
 
-class ThreadSample(QtCore.QThread):
-    newSample = QtCore.pyqtSignal(list)
+        iterlabel = QtGui.QLabel("Iterations: ")
+        
+        self.iterInput = QtGui.QLineEdit()
+        self.iterInput.setText('1000')
 
-    def __init__(self, parent=None):
-        super(ThreadSample, self).__init__(parent)
+        dtlabel = QtGui.QLabel("dt: ")
 
-    def run(self):
-        randomSample = random.sample(range(0, 10), 10)
+        self.dtinput = QtGui.QLineEdit()
+        self.dtinput.setText('.01')
+        
 
-        self.newSample.emit(randomSample)
+        self.runsim = QtGui.QPushButton('Run Simulation')
+        self.runsim.clicked.connect(self.runSim)
 
-class Window(QtGui.QWidget):
-    def __init__(self,parent = None):
-        super(Window, self).__init__(parent)
 
-        self.pushButtonPlot = QtGui.QPushButton(self)
-        self.pushButtonPlot.setText("Plot")
-        self.pushButtonPlot.clicked.connect(self.on_pushButtonPlot_clicked)
+        hbox = QtGui.QHBoxLayout()
+        hbox.addStretch(1)
 
-        self.matplotlibWidget = MatplotlibWidget(self)
+        hbox.addWidget(iterlabel)
+        hbox.addWidget(self.iterInput)
+        hbox.addWidget(dtlabel)
+        hbox.addWidget(self.dtinput)
+        hbox.addWidget(self.runsim)
 
-        self.layoutVertical = QtGui.QVBoxLayout(self)
-        self.layoutVertical.addWidget(self.pushButtonPlot)
-        self.layoutVertical.addWidget(self.matplotlibWidget)
 
-        self.threadSample = ThreadSample(self)
-        self.threadSample.newSample.connect(self.on_threadSample_newSample)
-        self.threadSample.finished.connect(self.on_threadSample_finished)
+        vbox = QtGui.QVBoxLayout()
+        vbox.addStretch(1)
+        vbox.addLayout(hbox)
+    
+        self.setLayout(vbox)
 
-    @QtCore.pyqtSlot()
-    def on_pushButtonPlot_clicked(self):
-        self.samples = 0
-        self.matplotlibWidget.axis.clear()
-        self.threadSample.start()
+        self.setWindowTitle('Ecosim')
+        self.show()
 
-    @QtCore.pyqtSlot(list)
-    def on_threadSample_newSample(self, sample):
-        self.matplotlibWidget.axis.plot(sample)
-        self.matplotlibWidget.canvas.draw()
- 
-    @QtCore.pyqtSlot()
-    def on_threadSample_finished(self):
-        self.samples += 1
-        if self.samples <= 2:
-            self.threadSample.start()
+    def runSim(self):
+        itters = self.iterInput.text()
+        dt = self.dtinput.text()
 
-if __name__=="__main__":
-    import sys
+        print(dt, itters)
+        return itters,dt
+
+def main():
     app = QtGui.QApplication(sys.argv)
-    app.setApplicationName("Window")
-    main = Window()
-    main.resize(250,150)
-    main.show()
+    ppi = PredPreyInterface()
     sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    main()
