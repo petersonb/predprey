@@ -42,6 +42,9 @@ class CentralWidget(QG.QWidget):
         model = PredatorPreyModel()
 
         animaldata = self.animals.getAnimalData()
+
+        relationships = self.animals.getRelationshipData()
+        print(relationships)
         print(animaldata)
 
         for d in animaldata:
