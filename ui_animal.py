@@ -51,8 +51,10 @@ class AnimalContainerWidget(QG.QWidget):
         vlayout.addWidget(delButton)
 
         self.setLayout(vlayout)
-
+        
         self.addAnimal()
+        
+        self.setFixedWidth(200)
 
         self.show()
 

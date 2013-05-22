@@ -4,6 +4,7 @@ import sys
 import PyQt4.QtGui as QG
 from ui_bottom import *
 from ui_animal import *
+from ui_graph import *
 
 class CentralWidget(QG.QWidget):
     
@@ -15,15 +16,22 @@ class CentralWidget(QG.QWidget):
     def buildUI(self):
         self.bottom = BottomWidget()
         self.animals = AnimalContainerWidget()
+        self.graph = GraphWidget()
+
+        fig = self.graph.getFigure().add_subplot(111)
+        fig.plot([1,2],[1,2])
         
+        fig2 = self.graph.getFigure().add_subplot(111)
+        fig2.plot([5,7],[10,12])
+
         vbox = QG.QVBoxLayout()
         
         mid = QG.QHBoxLayout()
-        mid.addStretch(1)
+        mid.addWidget(self.graph)
+
         mid.addWidget(self.animals)
 
         vbox.addLayout(mid)
-        vbox.addStretch(1)
 
         vbox.addWidget(self.bottom)
 
