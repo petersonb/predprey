@@ -10,12 +10,15 @@ from matplotlib.figure import Figure
 
 class GraphWidget(QG.QWidget):
     
-    def __init__(self,size = (5.0,4.0), dpi = 100):
+    def __init__(self):
         super(GraphWidget, self).__init__()
 
-        self.fig = Figure(size, dpi)
+        self.fig = Figure()
         self.canvas = FigureCanvas(self.fig)
-        self.canvas.setParent(self)
+
+        self.axis = self.fig.add_subplot(111)
+
+        #self.canvas.setParent(self)
         self.toolbar = NavigationToolbar(self.canvas, self)
 
         self.vbox = QG.QVBoxLayout()
@@ -29,6 +32,15 @@ class GraphWidget(QG.QWidget):
     def getFigure(self):
         return self.fig
 
+    def clear(self):
+        self.axis.clear()
+
+    def plot(self,data):
+        x = data[0]
+        ys = data[1]
+        for d in ys:
+            self.axis.plot(x,d)
+
     def draw(self):
         self.canvas.draw()
 
@@ -38,8 +50,9 @@ if __name__ == "__main__":
     app = QG.QApplication(sys.argv)
     gw = GraphWidget()
 
-    subplot = gw.getFigure().add_subplot(111)
-    subplot.plot([1,2],[1,2])
+    gw.plot([[1,2],[[1,2]]])
+    gw.clear()
+    gw.plot([[2,1],[[1,2]]])
     gw.draw()
     
     sys.exit(app.exec_())

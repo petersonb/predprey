@@ -6,6 +6,8 @@ from ui_bottom import *
 from ui_animal import *
 from ui_graph import *
 
+from predatorprey import *
+
 class CentralWidget(QG.QWidget):
     
     def __init__(self):
@@ -18,11 +20,7 @@ class CentralWidget(QG.QWidget):
         self.animals = AnimalContainerWidget()
         self.graph = GraphWidget()
 
-        fig = self.graph.getFigure().add_subplot(111)
-        fig.plot([1,2],[1,2])
-        
-        fig2 = self.graph.getFigure().add_subplot(111)
-        fig2.plot([5,7],[10,12])
+        self.bottom.runSimButton.clicked.connect(self.graphSimulation)
 
         vbox = QG.QVBoxLayout()
         
@@ -38,6 +36,22 @@ class CentralWidget(QG.QWidget):
         self.setLayout(vbox)
 
         self.show()
+
+    def graphSimulation(self):
+        model = PredatorPreyModel()
+        r = model.addAnimal('Rabbit',50,.1)
+        f = model.addAnimal('Fox',15,-.05)
+        
+        model.setPredator(f,r,.001,.01)
+
+        itters = self.bottom.getIterations()
+        dt = self.bottom.getDeltaT()
+
+        data = model.euler(itters,dt)
+
+        self.graph.clear()
+        self.graph.plot(data)
+        self.graph.draw()
 
 
 if __name__ == "__main__":
