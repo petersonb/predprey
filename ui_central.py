@@ -50,10 +50,21 @@ class CentralWidget(QG.QWidget):
         for d in animaldata:
             model.addAnimal(d[0],d[1],d[2])
 
-        r = model.addAnimal('Rabbit',50,.1)
-        f = model.addAnimal('Fox',15,-.05)
+        #r = model.addAnimal('Rabbit',50,.1)
+        #f = model.addAnimal('Fox',15,-.05)
         
-        model.setPredator(f,r,.001,.01)
+        for rel in relationships:
+            pred = rel[0]
+            predk = rel[1]
+            prey = rel[2]
+            preyk = rel[3]
+
+            pd = model.getAnimalLabel(pred)
+            py = model.getAnimalLabel(prey)
+
+            model.setPredator(pd,py,predk,preyk)
+
+        #model.setPredator(f,r,.001,.01)
 
         itters = self.bottom.getIterations()
         dt = self.bottom.getDeltaT()

@@ -108,12 +108,22 @@ class PredatorPreyModel:
                 data[1][j].append(animal.getPopulation())
                 
         return data
+
+    def getAnimalLabel(self,label):
+        for a in self.animals:
+            if a.getName() == label:
+                return a
+
+        return None
         
 if __name__ == "__main__":
     model = PredatorPreyModel()
     r = model.addAnimal('Rabbit',50,.1)
     f = model.addAnimal('Fox',15,-.05)
     
+    r = model.getAnimalLabel('Rabbit')
+    f = model.getAnimalLabel('Fox')
+
     print(r.getPopulation())
     print(f.getPopulation())
     
