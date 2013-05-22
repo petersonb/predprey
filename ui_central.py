@@ -18,6 +18,7 @@ class CentralWidget(QG.QWidget):
     def buildUI(self):
         self.bottom = BottomWidget()
         self.animals = AnimalContainerWidget()
+        self.animals.widgetResizable = False
         self.graph = GraphWidget()
 
         self.bottom.runSimButton.clicked.connect(self.graphSimulation)
@@ -39,6 +40,13 @@ class CentralWidget(QG.QWidget):
 
     def graphSimulation(self):
         model = PredatorPreyModel()
+
+        animaldata = self.animals.getAnimalData()
+        print(animaldata)
+
+        for d in animaldata:
+            model.addAnimal(d[0],d[1],d[2])
+
         r = model.addAnimal('Rabbit',50,.1)
         f = model.addAnimal('Fox',15,-.05)
         
