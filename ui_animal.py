@@ -116,6 +116,8 @@ class RelationshipDialog(QG.QDialog):
         vbox.addWidget(delButton)
         self.setLayout(vbox)
 
+        self.resize(500,300)
+
     def addRelationship(self):
         new = RelationshipWidget(self.animals)
         self.relationships.append(new)
