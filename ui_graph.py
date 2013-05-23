@@ -41,6 +41,11 @@ class GraphWidget(QG.QWidget):
         for d in ys:
             self.axis.plot(x,d)
 
+    def plotAvA2d(self,data):
+        x = data[1][0]
+        y = data[1][1]
+        self.axis.plot(x,y)
+
     def draw(self):
         self.canvas.draw()
 

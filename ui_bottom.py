@@ -14,8 +14,12 @@ class BottomWidget(QG.QWidget):
         self.dtInput = QG.QLineEdit('.01')
 
         self.runSimButton = QG.QPushButton('Run Simulation')
+        self.graphAvAButton2d = QG.QPushButton('Graph Animal vs Animal')
+        self.graphAvTButton = QG.QPushButton('Graph Animals vs Time')
 
         ebox = QG.QHBoxLayout()
+        ebox.addWidget(self.graphAvAButton2d)
+        ebox.addWidget(self.graphAvTButton)
         ebox.addStretch(1)
         ebox.addWidget(iterLabel)
         ebox.addWidget(self.iterInput)

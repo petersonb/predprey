@@ -22,6 +22,8 @@ class CentralWidget(QG.QWidget):
         self.graph = GraphWidget()
 
         self.bottom.runSimButton.clicked.connect(self.graphSimulation)
+        self.bottom.graphAvAButton2d.clicked.connect(self.graphAvA2d)
+        self.bottom.graphAvTButton.clicked.connect(self.graphAvT)
 
         vbox = QG.QVBoxLayout()
         
@@ -69,12 +71,23 @@ class CentralWidget(QG.QWidget):
         itters = self.bottom.getIterations()
         dt = self.bottom.getDeltaT()
 
-        data = model.euler(itters,dt)
+        self.data = model.euler(itters,dt)
 
         self.graph.clear()
-        self.graph.plot(data)
+        self.graph.plot(self.data)
         self.graph.draw()
 
+    def graphAvA2d(self):
+        self.graph.clear()
+        self.graph.plotAvA2d(self.data)
+        self.graph.draw()
+        
+    
+    
+    def graphAvT(self):
+        self.graph.clear()
+        self.graph.plot(self.data)
+        self.graph.draw()
 
 if __name__ == "__main__":
     app = QG.QApplication(sys.argv)
