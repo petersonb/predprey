@@ -1,0 +1,14 @@
+To run this, simply run the ui_main.py
+
+all of the predator prey mathematical code is in predatorprey.py
+
+an example of the code working without the GUI is simpleplot.py
+
+The __main__ in predatorprey.py can be run by anyone with python3.2
+
+simpleplot.py can be run if you have matplotlib (pylab)
+
+This should be able to be run on the linux lab. Otherwise, it requires
+PyQt4 and matplotlib (pylab).
+
+It's not worth installing those to run on a windows machine.
